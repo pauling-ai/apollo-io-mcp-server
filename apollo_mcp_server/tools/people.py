@@ -42,8 +42,11 @@ def register_people_tools(mcp: FastMCP) -> None:
         """
         Find a person's email and contact details by name and company.
 
-        Uses Apollo's People Enrichment endpoint. Providing a job title improves
-        match accuracy when multiple people share the same name at a company.
+        COSTS APOLLO CREDITS — only call when you actually need the email.
+        Do not call speculatively or in bulk without user confirmation.
+
+        Providing a job title improves match accuracy when multiple people
+        share the same name at a company.
 
         Returns name, email, email_status (verified/likely_to_engage/unverified),
         title, company, and LinkedIn URL. Set include_phone=True to also return
@@ -78,6 +81,9 @@ def register_people_tools(mcp: FastMCP) -> None:
     ) -> dict[str, Any]:
         """
         Look up a person's email and contact details from their LinkedIn profile URL.
+
+        COSTS APOLLO CREDITS — only call when you actually need the email.
+        Do not call speculatively or in bulk without user confirmation.
 
         More accurate than find_person when you already have the LinkedIn URL,
         since it matches on a unique identifier rather than name + company.

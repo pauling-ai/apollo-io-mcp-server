@@ -41,6 +41,10 @@ def register_company_tools(mcp: FastMCP) -> None:
         """
         Find people who work at a given company.
 
+        COSTS APOLLO CREDITS per result — keep max_results low (5 or less)
+        unless the user explicitly asks for more. Do not call in bulk without
+        user confirmation.
+
         Accepts either a company name (e.g. "Acme Pharma") or domain
         (e.g. "acme.com") — domain matching is more precise when available.
 
