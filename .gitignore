@@ -1,2 +1,4 @@
 # Don't add IDEA files.
 .idea
+
+.venv
