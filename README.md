@@ -24,7 +24,7 @@ All tools accept a company name or domain — domain matching is more precise wh
 
 ```bash
 # 1. Run setup — saves your API key to ~/.apollo-mcp/.env
-uvx --from git+https://github.com/pauling-ai/apollo-mcp-server apollo-mcp --setup
+uvx --from git+https://github.com/pauling-ai/apollo-io-mcp-server apollo-mcp --setup
 ```
 
 That's it. The key is stored in `~/.apollo-mcp/.env` and loaded automatically every time the server starts — no need to pass it in `.mcp.json` or set environment variables.
@@ -39,7 +39,7 @@ After running `--setup`, add to your `.mcp.json`:
     "apollo": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/pauling-ai/apollo-mcp-server", "apollo-mcp"],
+      "args": ["--from", "git+https://github.com/pauling-ai/apollo-io-mcp-server", "apollo-mcp"],
       "env": {}
     }
   }

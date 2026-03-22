@@ -33,9 +33,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pauling-ai/apollo-mcp-server"
-Repository = "https://github.com/pauling-ai/apollo-mcp-server"
-Issues = "https://github.com/pauling-ai/apollo-mcp-server/issues"
+Homepage = "https://github.com/pauling-ai/apollo-io-mcp-server"
+Repository = "https://github.com/pauling-ai/apollo-io-mcp-server"
+Issues = "https://github.com/pauling-ai/apollo-io-mcp-server/issues"
 
 [project.scripts]
 apollo-mcp = "apollo_mcp_server.cli_main:main"
