@@ -61,14 +61,14 @@ class ApolloClient:
         return response.json()
 
     async def people_search(self, payload: dict[str, Any]) -> dict[str, Any]:
-        """POST /mixed_people/search — search people with filters."""
+        """POST /mixed_people/api_search — search people with filters."""
         async with httpx.AsyncClient() as http:
             response = await http.post(
-                f"{self.base_url}/mixed_people/search",
+                f"{self.base_url}/mixed_people/api_search",
                 json=payload,
                 headers=self._headers,
             )
-        logger.debug("mixed_people/search status=%s", response.status_code)
+        logger.debug("mixed_people/api_search status=%s", response.status_code)
         self._raise_for_status(response)
         return response.json()
 
@@ -85,11 +85,17 @@ class ApolloClient:
         return response.json()
 
     async def check_auth(self) -> bool:
-        """Verify the API key is valid by hitting a lightweight endpoint."""
-        try:
-            await self.people_search({"per_page": 1, "page": 1})
-            return True
-        except ApolloError as e:
-            if e.status_code == 401:
-                return False
-            raise
+        """Verify the API key is valid.
+
+        Returns False only on 401 (invalid key). Any other response —
+        including 403 (plan restriction) or 422 (bad params) — means
+        the key was accepted by Apollo.
+        """
+        async with httpx.AsyncClient() as http:
+            response = await http.post(
+                f"{self.base_url}/people/match",
+                json={"name": "test"},
+                headers=self._headers,
+            )
+        logger.debug("check_auth status=%s", response.status_code)
+        return response.status_code != 401

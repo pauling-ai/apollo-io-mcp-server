@@ -51,7 +51,7 @@ class TestPeopleMatch:
 class TestPeopleSearch:
     async def test_success(self, client: ApolloClient, httpx_mock: HTTPXMock):
         httpx_mock.add_response(
-            url=f"{BASE_URL}/mixed_people/search",
+            url=f"{BASE_URL}/mixed_people/api_search",
             method="POST",
             json={"people": [{"name": "Bob Jones"}], "pagination": {"total_entries": 1}},
         )
@@ -60,7 +60,7 @@ class TestPeopleSearch:
 
     async def test_empty_results(self, client: ApolloClient, httpx_mock: HTTPXMock):
         httpx_mock.add_response(
-            url=f"{BASE_URL}/mixed_people/search",
+            url=f"{BASE_URL}/mixed_people/api_search",
             method="POST",
             json={"people": [], "pagination": {"total_entries": 0}},
         )
@@ -86,16 +86,25 @@ class TestOrganizationEnrich:
 class TestCheckAuth:
     async def test_valid_key(self, client: ApolloClient, httpx_mock: HTTPXMock):
         httpx_mock.add_response(
-            url=f"{BASE_URL}/mixed_people/search",
+            url=f"{BASE_URL}/people/match",
             method="POST",
-            json={"people": []},
+            json={"person": None},
         )
         assert await client.check_auth() is True
 
     async def test_invalid_key(self, client: ApolloClient, httpx_mock: HTTPXMock):
         httpx_mock.add_response(
-            url=f"{BASE_URL}/mixed_people/search",
+            url=f"{BASE_URL}/people/match",
             method="POST",
             status_code=401,
         )
         assert await client.check_auth() is False
+
+    async def test_plan_restricted_endpoint_still_valid(self, client: ApolloClient, httpx_mock: HTTPXMock):
+        # 403 means key is valid but endpoint not on plan — should still pass
+        httpx_mock.add_response(
+            url=f"{BASE_URL}/people/match",
+            method="POST",
+            status_code=403,
+        )
+        assert await client.check_auth() is True
