@@ -1,0 +1,61 @@
+[project]
+name = "apollo-mcp-server"
+version = "0.1.0"
+description = "MCP server for Apollo.io contact and company enrichment"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Pauling AI" }
+]
+license = "MIT"
+keywords = [
+    "apollo",
+    "mcp",
+    "model-context-protocol",
+    "enrichment",
+    "ai",
+    "anthropic",
+    "claude",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Environment :: Console",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastmcp>=2.0.0",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/pauling-ai/apollo-mcp-server"
+Repository = "https://github.com/pauling-ai/apollo-mcp-server"
+Issues = "https://github.com/pauling-ai/apollo-mcp-server/issues"
+
+[project.scripts]
+apollo-mcp = "apollo_mcp_server.cli_main:main"
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["apollo_mcp_server*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+apollo_mcp_server = ["py.typed"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.0.0",
+    "pytest-httpx>=0.30.0",
+    "ruff>=0.4.0",
+]
