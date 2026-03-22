@@ -2,12 +2,16 @@
 
 import os
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
-
+APOLLO_CONFIG_DIR = Path.home() / ".apollo-mcp"
+APOLLO_CONFIG_FILE = APOLLO_CONFIG_DIR / ".env"
 APOLLO_BASE_URL = "https://api.apollo.io/api/v1"
+
+# Load from ~/.apollo-mcp/.env first; explicit env vars always take precedence
+load_dotenv(APOLLO_CONFIG_FILE)
 
 
 @dataclass
@@ -21,10 +25,9 @@ def get_config() -> Config:
     api_key = os.getenv("APOLLO_API_KEY", "").strip()
     if not api_key:
         raise ValueError(
-            "APOLLO_API_KEY environment variable is not set.\n"
-            "Get your API key at: https://app.apollo.io/#/settings/integrations/api_keys\n"
-            "Then set it in your environment or a .env file:\n"
-            "  APOLLO_API_KEY=your_key_here"
+            "Apollo API key not found.\n"
+            "Run: apollo-mcp --setup\n"
+            "Or get your key at: https://developer.apollo.io/#/keys"
         )
     return Config(
         api_key=api_key,

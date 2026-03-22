@@ -23,74 +23,34 @@ All tools accept a company name or domain — domain matching is more precise wh
 **Prerequisites:** Python 3.12+ and [uv](https://docs.astral.sh/uv/) installed
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/pauling-ai/apollo-mcp-server
-cd apollo-mcp-server
-
-# 2. Install dependencies
-uv sync
-
-# 3. Get your Apollo API key
-# Go to: https://app.apollo.io/#/settings/integrations/api_keys
-# Create a key and copy it
-
-# 4. Set the API key
-export APOLLO_API_KEY=your_key_here
-# Or add it to a .env file in the project root:
-echo "APOLLO_API_KEY=your_key_here" > .env
-
-# 5. Verify it works
-uv run apollo-mcp --status
+# 1. Run setup — saves your API key to ~/.apollo-mcp/.env
+uvx --from git+https://github.com/pauling-ai/apollo-mcp-server apollo-mcp --setup
 ```
 
-## Installing into another project
-
-```bash
-# With uv (recommended)
-uv pip install -e /path/to/apollo-mcp-server
-
-# Or with pip
-pip install -e /path/to/apollo-mcp-server
-```
+That's it. The key is stored in `~/.apollo-mcp/.env` and loaded automatically every time the server starts — no need to pass it in `.mcp.json` or set environment variables.
 
 ## Claude Code / MCP Configuration
 
-After installing, add to your `.mcp.json`:
+After running `--setup`, add to your `.mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "apollo": {
       "type": "stdio",
-      "command": "/path/to/venv/bin/apollo-mcp",
-      "env": {
-        "APOLLO_API_KEY": "your_key_here",
-        "LOG_LEVEL": "WARNING"
-      }
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/pauling-ai/apollo-mcp-server", "apollo-mcp"],
+      "env": {}
     }
   }
 }
 ```
 
-Or run directly from the repo with `uv` (no install needed):
-
-```json
-{
-  "mcpServers": {
-    "apollo": {
-      "type": "stdio",
-      "command": "uv",
-      "args": ["--directory", "/path/to/apollo-mcp-server", "run", "apollo-mcp"],
-      "env": {
-        "APOLLO_API_KEY": "your_key_here"
-      }
-    }
-  }
-}
-```
+No API key in the config — it's read from `~/.apollo-mcp/.env` automatically.
 
 ## CLI Options
 
+- `--setup` — Save API key to `~/.apollo-mcp/.env` and verify it works
 - `--status` — Verify API key is valid and exit
 - `--log-level {DEBUG,INFO,WARNING,ERROR}` — Logging level (default: WARNING)
 - `--transport {stdio,streamable-http}` — Transport mode (default: stdio)
@@ -108,9 +68,9 @@ Apollo charges credits for enrichment calls. Key things to know:
 
 ## Troubleshooting
 
-**`APOLLO_API_KEY` not set:** Run `export APOLLO_API_KEY=your_key` or add it to a `.env` file.
+**API key not found:** Run `apollo-mcp --setup` to save your key to `~/.apollo-mcp/.env`.
 
-**API key rejected (401):** Verify your key at [Apollo API settings](https://app.apollo.io/#/settings/integrations/api_keys). Keys can be revoked or have restricted permissions.
+**API key rejected (401):** Re-run `apollo-mcp --setup` with a fresh key from [developer.apollo.io/#/keys](https://developer.apollo.io/#/keys).
 
 **Quota exhausted (429):** You've hit Apollo's rate limit or used all credits on your plan. Check usage at Apollo billing.
 
